@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WaveChat</title>
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="aero-bg" id="aeroBg" aria-hidden="true"></div>
+  <div class="shell" id="shell">
+    <aside class="sidebar" id="sidebar" aria-label="Navegación">
+      <div class="brand"><span class="brand-logo">🎧</span> WaveChat</div>
+
+      <section class="side-section">
+        <h2>Salas</h2>
+        <ul id="roomList" class="room-list"></ul>
+      </section>
+
+      <section class="side-section side-section--grow">
+        <h2>En línea <span id="onlineCount" class="pill">0</span></h2>
+        <ul id="userList" class="user-list"></ul>
+      </section>
+
+      <div class="me">
+        <span id="meAvatar" class="avatar avatar--lg">?</span>
+        <div class="me-info">
+          <strong id="meName">…</strong>
+          <span class="me-sub">Sesión iniciada</span>
+        </div>
+        <button id="logoutBtn" class="icon-btn" type="button" aria-label="Cerrar sesión" title="Cerrar sesión">⎋</button>
+      </div>
+    </aside>
+    <div class="scrim" id="scrim"></div>
+
+    <div class="main">
+      <header class="app-header">
+        <button id="menuBtn" class="icon-btn menu-btn" type="button" aria-label="Abrir menú">☰</button>
+        <div class="title">
+          <h1 id="roomTitle">General</h1>
+          <span id="roomDesc" class="user-count">Conversación abierta para todos</span>
+        </div>
+        <div class="header-right">
+          <span id="status" class="status status--reconnecting" role="status" aria-live="polite">
+            <span class="dot"></span><span id="statusText">Reconectando...</span>
+          </span>
+          <button id="themeBtn" class="icon-btn" type="button" aria-label="Cambiar tema claro/oscuro" title="Cambiar tema">☀️</button>
+        </div>
+      </header>
+
+      <main id="messages" class="messages" aria-live="polite"></main>
+
+      <div id="typing" class="typing" aria-live="polite"></div>
+      <div id="error" class="error" role="alert" hidden></div>
+
+      <div id="attachBar" class="attach-bar" hidden>
+        <div id="attachPreview" class="attach-preview"></div>
+        <button id="attachClear" class="icon-btn" type="button" aria-label="Quitar adjunto" title="Quitar adjunto">✕</button>
+      </div>
+      <div id="recBar" class="rec-bar" hidden>
+        <span class="rec-dot"></span>
+        <strong>Grabando</strong>
+        <span id="recTime">0:00</span>
+        <span class="rec-spacer"></span>
+        <button id="recCancel" class="icon-btn" type="button" aria-label="Cancelar grabación" title="Cancelar">✕</button>
+        <button id="recStop" class="btn-primary" type="button">Detener</button>
+      </div>
+
+      <form id="composer" class="composer" autocomplete="off">
+        <input type="file" id="fileInput" accept="image/png,image/jpeg,image/gif,image/webp,audio/*" hidden>
+        <button id="attachBtn" class="icon-btn" type="button" aria-label="Adjuntar imagen o audio" title="Adjuntar imagen o audio" disabled>📎</button>
+        <button id="micBtn" class="icon-btn" type="button" aria-label="Grabar nota de voz" title="Grabar nota de voz" disabled>🎤</button>
+        <input type="text" id="messageInput" placeholder="Escribe un mensaje..." maxlength="500" disabled>
+        <span id="counter" class="counter">0/500</span>
+        <button id="sendBtn" type="submit" class="btn-primary" disabled>Enviar</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="lightbox" class="lightbox" hidden role="dialog" aria-label="Imagen ampliada">
+    <img id="lightboxImg" alt="Imagen ampliada">
+  </div>
+
+  <script src="aero.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

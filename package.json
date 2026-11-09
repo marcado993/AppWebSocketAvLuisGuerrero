@@ -1,0 +1,25 @@
+{
+  "name": "labwebav-websocketchat",
+  "version": "1.0.0",
+  "description": "WebSocket Server for Chat Application",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "basico": "node lab-basico/index.js",
+    "test": "node test/smoke.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^18.0.9",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.3",
+    "jsonwebtoken": "^9.0.3",
+    "ws": "^8.22.1"
+  }
+}
+

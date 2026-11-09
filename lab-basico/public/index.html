@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPN FIS Chat WebSocket</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; max-width: 800px; }
+        #messages { border: 1px solid #ccc; height: 300px; overflow-y: auto; padding: 10px; margin: 10px 0; background: #f9f9f9; }
+        .message { margin: 5px 0; padding: 5px; background: white; border-radius: 3px; }
+        .username { font-weight: bold; color: #0066cc; }
+        .timestamp { font-size: 12px; color: #666; float: right; }
+        input, button { padding: 8px; margin: 5px; }
+        #messageInput { width: 70%; }
+        #sendBtn { width: 20%; }
+        #usernameInput { width: 200px; }
+    </style>
+</head>
+<body>
+    <h1>Chat WebSocket</h1>
+
+    <div>
+        <label>Usuario: </label>
+        <input type="text" id="usernameInput" placeholder="Ingresa tu nombre" maxlength="20">
+    </div>
+
+    <div id="messages"></div>
+
+    <div>
+        <input type="text" id="messageInput" placeholder="Escribe tu mensaje..." maxlength="500">
+        <button id="sendBtn">Enviar</button>
+    </div>
+
+    <div id="status" style="margin-top: 10px; font-size: 12px; color: #666;"></div>
+
+    <script>
+        let ws;
+        let connected = false;
+
+        const messages = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
+        const usernameInput = document.getElementById('usernameInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const status = document.getElementById('status');
+
+        function connect() {
+            const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            ws = new WebSocket(`${protocol}//${location.host}`);
+
+            ws.onopen = () => {
+                connected = true;
+                status.textContent = 'Conectado';
+                status.style.color = 'green';
+                sendBtn.disabled = false;
+            };
+
+            ws.onmessage = (event) => {
+                const msg = JSON.parse(event.data);
+                addMessage(msg.username, msg.text, msg.timestamp);
+            };
+
+            ws.onclose = () => {
+                connected = false;
+                status.textContent = 'Desconectado - Intentando reconectar...';
+                status.style.color = 'red';
+                sendBtn.disabled = true;
+                setTimeout(connect, 3000);
+            };
+
+            ws.onerror = (error) => {
+                console.error('Error WebSocket:', error);
+            };
+        }
+
+        function addMessage(username, text, timestamp) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'message';
+            msgDiv.innerHTML = `
+                <span class="username">${username}:</span>
+                ${text}
+                <span class="timestamp">${timestamp}</span>
+            `;
+            messages.appendChild(msgDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function sendMessage() {
+            const username = usernameInput.value.trim();
+            const text = messageInput.value.trim();
+
+            if (!username) {
+                alert('Por favor ingresa tu nombre de usuario');
+                usernameInput.focus();
+                return;
+            }
+
+            if (!text) {
+                messageInput.focus();
+                return;
+            }
+
+            if (!connected) {
+                alert('No hay conexión al servidor');
+                return;
+            }
+
+            ws.send(JSON.stringify({ username, text }));
+            messageInput.value = '';
+        }
+
+        // Event listeners
+        sendBtn.addEventListener('click', sendMessage);
+
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        usernameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                messageInput.focus();
+            }
+        });
+
+        // Inicializar conexión
+        connect();
+
+        // Focus inicial
+        usernameInput.focus();
+    </script>
+</body>
+</html>
